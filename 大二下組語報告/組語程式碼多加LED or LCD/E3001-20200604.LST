@@ -1,0 +1,111 @@
+Intel-8051 Macro Assembler - Version 1.00
+
+      1    0000                                   ORG     0000H
+      2    0000     11 22                         ACALL   INIT
+      3    0002                           
+      4    0002     11 52                         ACALL   LINE1
+      5    0004     90 00 8F                      MOV     DPTR,#TAB1
+      6    0007     11 45                         ACALL   DISPLAY
+      7    0009                           
+      8    0009     11 78                 	  ACALL	DELAY
+      9    000B     11 78                 	  ACALL	DELAY
+     10    000D     11 78                 	  ACALL	DELAY
+     11    000F     11 78                 	  ACALL	DELAY
+     12    0011     11 78                 	  ACALL	DELAY
+     13    0013     11 78                 	  ACALL	DELAY
+     14    0015     11 78                 	  ACALL	DELAY
+     15    0017     11 78                 	  ACALL	DELAY
+     16    0019     11 52                         ACALL   LINE1
+     17    001B     90 00 9C                      MOV     DPTR,#TAB2
+     18    001E     11 45                         ACALL   DISPLAY
+     19    0020                           
+     20    0020     01 20                 OK:     AJMP    OK
+     21    0022                           
+     22    0022                           ;
+     23    0022     11 78                 INIT:   ACALL   DELAY
+     24    0024                           
+     25    0024     74 38                         MOV     A,#38H
+     26    0026     11 5C                         ACALL   WRINS
+     27    0028     74 38                         MOV     A,#38H
+     28    002A     11 5C                         ACALL   WRINS
+     29    002C     74 38                         MOV     A,#38H
+     30    002E     11 5C                         ACALL   WRINS
+     31    0030     74 38                         MOV     A,#38H
+     32    0032     11 5C                         ACALL   WRINS
+     33    0034                           
+     34    0034     74 08                         MOV     A,#08H
+     35    0036     11 5C                         ACALL   WRINS
+     36    0038                           
+     37    0038     74 01                         MOV     A,#01H
+     38    003A     11 5C                         ACALL   WRINS
+     39    003C                           
+     40    003C     74 06                         MOV     A,#06H
+     41    003E     11 5C                         ACALL   WRINS
+     42    0040                           
+     43    0040     74 0C                         MOV     A,#0CH
+     44    0042     11 5C                         ACALL   WRINS
+     45    0044     22                            RET
+     46    0045                           ;
+     47    0045     7F 00                 DISPLAY:	MOV     R7,#00H
+     48    0047     EF                    NEXT:   MOV     A,R7
+     49    0048     93                            MOVC    A,@A+DPTR
+     50    0049     B4 10 01                      CJNE    A,#10H,DSP
+     51    004C     22                            RET
+     52    004D     11 6A                 DSP:    ACALL   WRDATA
+     53    004F     0F                            INC     R7
+     54    0050     01 47                         AJMP    NEXT
+     55    0052                           
+     56    0052     74 80                 LINE1:  MOV     A,#10000000B
+     57    0054     11 5C                         ACALL   WRINS
+     58    0056     22                            RET
+     59    0057                           
+     60    0057     74 C0                 LINE2:  MOV     A,#11000000B
+     61    0059     11 5C                         ACALL   WRINS
+     62    005B     22                            RET
+     63    005C                           
+     64    005C     75 90 3F              WRINS:  MOV     P1,#00111111B   ;RS=0,E=0,R/W=0(R/W 板子上預設為零);P1.7 E，P1.6 RS
+     65    005F     00                            NOP
+     66    0060     D2 97                         SETB    P1.7            ;E=1
+     67    0062     F5 80                         MOV     P0,A		  ;把指令碼送至LCD模組的DB7~DB0
+     68    0064     00                            NOP
+     69    0065     C2 97                         CLR     P1.7            ;E=0
+     70    0067     11 81                         ACALL   DLY1
+     71    0069     22                            RET
+     72    006A                           
+     73    006A     75 90 7F              WRDATA: MOV     P1,#01111111B   ;RS=1,R/W=0,E=0
+     74    006D     00                            NOP
+     75    006E     D2 97                         SETB    P1.7            ;E=1
+     76    0070     F5 80                         MOV     P0,A		  ;把指令碼送至LCD模組的DB7~DB0
+     77    0072     00                            NOP
+     78    0073     C2 97                         CLR     P1.7            ;E=0
+     79    0075     11 8A                         ACALL   DLY2
+     80    0077     22                            RET
+     81    0078                           ;
+     82    0078     7E 64                 DELAY:  MOV     R6,#100
+     83    007A     7F C8                 DL:     MOV     R7,#200
+     84    007C     DF FE                         DJNZ    R7,$
+     85    007E     DE FA                         DJNZ    R6,DL
+     86    0080     22                            RET
+     87    0081                           ;
+     88    0081     7E 14                 DLY1:   MOV     R6,#20
+     89    0083     7F C8                 DL1:    MOV     R7,#200
+     90    0085     DF FE                         DJNZ    R7,$
+     91    0087     DE FA                         DJNZ    R6,DL1
+     92    0089     22                            RET
+     93    008A                           ;
+     94    008A     7E 50                 DLY2:   MOV     R6,#80
+     95    008C     DE FE                         DJNZ    R6,$
+     96    008E     22                            RET
+     97    008F                           ;now control machine 01
+     98    008F                           TAB1:	  ;DB      'Cont'
+     99    008F                           	  ;DB      'rol '
+    100    008F     4D 61 63 68           	  DB      'Mach'
+    101    0093     69 6E 65 20           	  DB      'ine '
+    102    0097     30 31 20 20           	  DB      '01  '
+    103    009B     10                            DB      10H
+    104    009C     49 20 61 6D           TAB2:   DB      'I am'
+    105    00A0     20 61 20                      DB      ' a '
+    106    00A3     4C 43 44 2E                   DB      'LCD.'
+    107    00A7     10                            DB      10H
+    108    00A8                           
+    109    00A8                                   END

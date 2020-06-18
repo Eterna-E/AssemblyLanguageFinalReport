@@ -1,0 +1,36 @@
+        ORG     0000H
+START:  MOV     R4,#20
+RING:   MOV     R6,#104
+        MOV     R5,#8
+        ACALL   SOUND
+        MOV     R6,#69
+        MOV     R5,#12
+        ACALL   SOUND
+        DJNZ    R4,RING
+        ACALL   D2S
+        AJMP    START
+;
+SOUND:  CLR     P3.7
+        ACALL   DELAY
+        SETB    P3.7
+        ACALL   DELAY
+        DJNZ    R5,SOUND
+        RET
+DELAY:  MOV     B,R6
+DL:     MOV     R7,#6
+        DJNZ    R7,$
+        DJNZ    R6,DL
+        MOV     R6,B
+        RET
+;
+D2S:    MOV     R5,#20
+DL1:    MOV     R6,#250
+DL2:    MOV     R7,#200
+DL3:    DJNZ    R7,DL3
+        DJNZ    R6,DL2
+        DJNZ    R5,DL1
+        RET
+;
+        END
+
+
