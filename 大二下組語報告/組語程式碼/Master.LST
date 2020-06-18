@@ -1,0 +1,106 @@
+Intel-8051 Macro Assembler - Version 1.00
+
+      1    0000                           		ORG		0000H
+      2    0000     01 02                 		AJMP    	MAIN
+      3    0002                           ;
+      4    0002     75 89 20              MAIN:   	MOV     	TMOD,#00100000B 
+      5    0005     75 8D E8                      	MOV     	TH1,#232        
+      6    0008     75 8B E8                      	MOV     	TL1,#232        
+      7    000B     D2 8E                         	SETB    	TR1             
+      8    000D                           ;
+      9    000D     75 98 D0                      	MOV     	SCON,#11010000B 
+     10    0010     D2 AC                 	  	SETB		ES
+     11    0012     D2 AF                 	  	SETB		EA
+     12    0014     C2 99                 	  	CLR 		TI
+     13    0016     75 99 FF              	  	MOV		SBUF,#11111111B
+     14    0019                           ;
+     15    0019     75 90 FE              LOOP:   	MOV	    	P1,#11111110B
+     16    001C     30 A0 1A              		JNB     	P2.0,CASE1      
+     17    001F     30 A1 17              		JNB     	P2.1,CASE1      
+     18    0022     30 A2 14              		JNB     	P2.2,CASE1      
+     19    0025     30 A3 11              		JNB     	P2.3,CASE1      
+     20    0028     75 90 FD              	 	MOV	    	P1,#11111101B
+     21    002B     30 A0 3E              	 	JNB     	P2.0,CASE2      
+     22    002E     30 A1 3B              		JNB     	P2.1,CASE2      
+     23    0031     30 A2 38              		JNB     	P2.2,CASE2      
+     24    0034     30 A3 35              		JNB     	P2.3,CASE2      
+     25    0037     01 19                 	 	AJMP    	LOOP
+     26    0039                           ;
+     27    0039     D2 9B                 CASE1:  	SETB    	TB8             
+     28    003B     C2 99                         	CLR     	TI              
+     29    003D     75 99 01                      	MOV     	SBUF,#01        
+     30    0040     30 99 FD                      	JNB     	TI,$            
+     31    0043     12 00 AB                      	CALL    	DELAY           
+     32    0046                           
+     33    0046     C2 9B                         	CLR     	TB8             
+     34    0048     C2 99                         	CLR     	TI              
+     35    004A     85 A0 99                      	MOV     	SBUF,P2         
+     36    004D     30 99 FD                      	JNB     	TI,$            
+     37    0050                           
+     38    0050     C2 98                         	CLR     	RI              
+     39    0052     12 00 AB                      	CALL    	DELAY           
+     40    0055     E5 99                         	MOV     	A,SBUF          
+     41    0057                           ;
+     42    0057     A2 E0                 		MOV		C,ACC.0
+     43    0059     92 80                 		MOV		P0.0,C
+     44    005B     A2 E1                 		MOV		C,ACC.1
+     45    005D     92 81                 		MOV		P0.1,C
+     46    005F     A2 E2                 		MOV		C,ACC.2
+     47    0061     92 82                 		MOV		P0.2,C
+     48    0063     A2 E3                 		MOV		C,ACC.3
+     49    0065     92 83                 		MOV		P0.3,C
+     50    0067                           ;        	MOV	   	P0,A
+     51    0067     12 00 A2                      	CALL    	WAIT            
+     52    006A     01 19                         	AJMP    	LOOP
+     53    006C                           ;
+     54    006C                           
+     55    006C     75 80 FF              CASE2:  	MOV		P0,#11111111B
+     56    006F     D2 9B                 	  	SETB    	TB8             
+     57    0071     C2 99                         	CLR     	TI              
+     58    0073     75 99 02                      	MOV     	SBUF,#02        
+     59    0076     30 99 FD                      	JNB     	TI,$            
+     60    0079     12 00 AB                      	CALL    	DELAY           
+     61    007C                           
+     62    007C     C2 9B                         	CLR     	TB8             
+     63    007E     C2 99                         	CLR     	TI              
+     64    0080     85 A0 99                      	MOV     	SBUF,P2        
+     65    0083     30 99 FD                      	JNB     	TI,$            
+     66    0086                           
+     67    0086     C2 98                         	CLR     	RI              
+     68    0088     12 00 AB                      	CALL    	DELAY           
+     69    008B     E5 99                         MOV     A,SBUF          
+     70    008D     A2 E0                 		MOV		C,ACC.0
+     71    008F     92 84                 		MOV		P0.4,C
+     72    0091     A2 E1                 		MOV		C,ACC.1
+     73    0093     92 85                 		MOV		P0.5,C
+     74    0095     A2 E2                 		MOV		C,ACC.2
+     75    0097     92 86                 		MOV		P0.6,C
+     76    0099     A2 E3                 		MOV		C,ACC.3
+     77    009B     92 87                 		MOV		P0.7,C
+     78    009D                           ;        MOV     C,ACC.2         
+     79    009D                           ;        MOV     P0.2,C          
+     80    009D                           ;	  MOV     C,ACC.3         
+     81    009D                           ;        MOV     P0.3,C
+     82    009D                           ;	  RL	A
+     83    009D                           ;	  RL	A
+     84    009D                           ;	  RL	A
+     85    009D                           ;	  RL	A         
+     86    009D                           	  	;MOV		P0,SBUF
+     87    009D     12 00 A2                      	CALL    	WAIT            
+     88    00A0     01 19                         	AJMP    	LOOP
+     89    00A2                           ;
+     90    00A2                           ;
+     91    00A2     12 00 AB              WAIT:   	CALL    	DELAY
+     92    00A5     E5 A0                         	MOV     	A,P2
+     93    00A7     B4 FF F8                      	CJNE    	A,#11111111B,WAIT
+     94    00AA     22                            	RET
+     95    00AB                           ;
+     96    00AB     7E 19                 DELAY:  	MOV     	R6,#25
+     97    00AD     7F C8                 DL1:    	MOV     	R7,#200
+     98    00AF     DF FE                 DL2:    	DJNZ    	R7,DL2
+     99    00B1     DE FA                         	DJNZ    	R6,DL1
+    100    00B3     22                            	RET
+    101    00B4                           ;
+    102    00B4                                   	END
+    103    00B4                           
+    104    00B4                           

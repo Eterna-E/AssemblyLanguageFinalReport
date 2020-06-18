@@ -1,0 +1,66 @@
+Intel-8051 Macro Assembler - Version 1.00
+
+      1    0000                           		ORG     0000H
+      2    0000                           ;
+      3    0000     75 89 20                      	MOV     TMOD,#00100000B 
+      4    0003     75 8D E8                      	MOV     TH1,#232        
+      5    0006     75 8B E8                      	MOV     TL1,#232        
+      6    0009     D2 8E                         	SETB    TR1             
+      7    000B                           ;
+      8    000B     75 98 D0              		MOV     SCON,#11010000B 
+      9    000E                           LOOP:   
+     10    000E     D2 9D                 		SETB    SM2             
+     11    0010     C2 98                         	CLR     RI              
+     12    0012     30 98 FD                      	JNB     RI,$            
+     13    0015     E5 99                         	MOV     A,SBUF          
+     14    0017     B4 02 F4                      	CJNE    A,#02,LOOP      
+     15    001A                           
+     16    001A     C2 9D                         	CLR     SM2             
+     17    001C     C2 98                         	CLR     RI              
+     18    001E     30 98 FD                      	JNB     RI,$            
+     19    0021     E5 99                         	MOV     A,SBUF          
+     20    0023     30 E0 0B                      	JNB     ACC.0,LED1        
+     21    0026     30 E1 18                      	JNB     ACC.1,LED2       
+     22    0029     30 E2 25                      	JNB     ACC.2,LED3        
+     23    002C     30 E3 32                      	JNB     ACC.3,LED4       
+     24    002F                           ;        JNB     ACC.4,ON3        
+     25    002F                           ;        JNB     ACC.5,OFF3       
+     26    002F                           ;        JNB     ACC.6,ON4        
+     27    002F                           ;        JNB     ACC.7,OFF4       
+     28    002F     01 0E                         	AJMP    LOOP
+     29    0031                           ;
+     30    0031                           
+     31    0031                           ;
+     32    0031     E5 80                 LED1:   	MOV		A,P0
+     33    0033     64 01                 	  	XRL		A,#00000001B
+     34    0035     F5 80                 	  	MOV		P0,A
+     35    0037     C2 99                         	CLR     	TI              
+     36    0039     85 80 99                      	MOV     	SBUF,P0         
+     37    003C     30 99 FD                      	JNB     	TI,$            
+     38    003F     01 0E                         	AJMP    	LOOP
+     39    0041                           ;
+     40    0041     E5 80                 LED2:   	MOV		A,P0
+     41    0043     64 02                 	  	XRL		A,#00000010B
+     42    0045     F5 80                 	  	MOV		P0,A
+     43    0047     C2 99                         	CLR     	TI              
+     44    0049     85 80 99                      	MOV     	SBUF,P0         
+     45    004C     30 99 FD                      	JNB     	TI,$            
+     46    004F     01 0E                         	AJMP    	LOOP
+     47    0051                           ;
+     48    0051     E5 80                 LED3:   	MOV		A,P0
+     49    0053     64 04                 	  	XRL		A,#00000100B
+     50    0055     F5 80                 	  	MOV		P0,A
+     51    0057     C2 99                         	CLR     	TI              
+     52    0059     85 80 99                      	MOV     	SBUF,P0         
+     53    005C     30 99 FD                      	JNB     	TI,$            
+     54    005F     01 0E                         	AJMP    	LOOP
+     55    0061                           ;
+     56    0061     E5 80                 LED4:   	MOV		A,P0
+     57    0063     64 08                    		XRL	 	A,#00001000B
+     58    0065     F5 80                 	  	MOV		P0,A
+     59    0067     C2 99                         	CLR     	TI              
+     60    0069     85 80 99                      	MOV     	SBUF,P0         
+     61    006C     30 99 FD                      	JNB     	TI,$            
+     62    006F     01 0E                         	AJMP    	LOOP
+     63    0071                           ;
+     64    0071                                   	END
